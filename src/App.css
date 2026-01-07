@@ -1,42 +1,481 @@
-#root {
-  max-width: 1280px;
+/* =========================
+   Global / Reset
+   ========================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  /* Page background + default text */
+  color: #df5858;
+}
+
+/* =========================
+   Layout helpers (optional)
+   Use .container for normal sections later (Projects, About, etc.)
+   ========================= */
+.container {
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 80px 24px;
+}
+
+/* =========================
+   Hero section
+   Full-screen intro section
+   ========================= */
+.hero {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+
+  /* Full-width hero background */
+  background: linear-gradient(180deg, #020617, #0f172a);
+}
+
+/* Centers hero content and keeps it readable on wide screens */
+.hero-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 1100px;
+  width: 100%;
+  padding: 0 32px;
+  margin: 0 auto;
+
+  /* IMPORTANT: prevents flex / overflow children from causing weird shrink behavior */
+  min-width: 0;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 16px;
+}
+
+.hero-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 3em;
+  margin-bottom: 24px;
+}
+
+/* Use this for a normal subtitle line (not the scrolling roles strip) */
+.subtitle {
+  color: #94a3b8;
+  max-width: 600px;
+  font-size: 1.1rem;
+}
+
+.profile-pic {
+  width: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  object-fit: cover;
+  height: 12em;
+
+  border: 2px solid #1e293b;
+  transform: translateY(0.08em);
+}
+
+/* =========================
+   Links (GitHub / LinkedIn / etc.)
+   ========================= */
+.links {
+  margin-top: 24px;
+  display: flex;
+}
+
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+
+  background: #020617;
+  border: 1px solid #1e293b;
+
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.95rem;
+
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.links a {
+  margin-right: 16px;
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   Roles horizontal scroller
+   IMPORTANT: Wrap .roles-scroll inside .roles-wrapper in your JSX
+   so the hero layout doesn't "shrink" to the scroller width.
+   ========================= */
+.roles-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* The actual scroller pill */
+.roles-scroll {
+  display: flex;
+  gap: 12px;
+
+  /* Horizontal scroll behavior */
+  overflow-x: auto;
+  white-space: nowrap;
+
+  /* Visual sizing (keeps it from being huge on desktop) */
+  max-width: 720px;
+
+  /* Padding gives breathing room + space for fade edges */
+  padding: 10px 40px;
+
+  /* Styling */
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 999px;
+
+  /* Hide scrollbar (Firefox + WebKit) */
+  scrollbar-width: none;
+
+  /* Needed for some flex/overflow edge cases */
+  min-width: 0;
+
+  /* Fade edges (only after padding — doesn’t hide first item immediately) */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 32px,
+    black calc(100% - 32px),
+    transparent 100%
+  );
+}
+
+.roles-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Each role item */
+.roles-scroll span {
+  flex-shrink: 0;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+/* Separators between items */
+.roles-scroll span::after {
+  content: "|";
+  margin-left: 12px;
+  color: #475569;
+}
+
+.roles-scroll span:last-child::after {
+  content: "";
+}
+
+/* =========================
+   Projects section layout
+   ========================= */
+.projects-section {
+  background: linear-gradient(
+    180deg,
+    #070707 0%,
+    #0d0d0d 100%
+  );
+}
+
+
+.projects-section h2 {
+  margin-bottom: 32px;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Grid layout (stacked for now, we can upgrade later) */
+.projects-grid {
+  display: grid;
+  gap: 24px;
+
+  grid-template-columns: 1fr;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Individual project card */
+.project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  /* Card surface */
+  padding: 20px;
+  border-radius: 16px;
+  background: #121212;
+  border: 1px solid #2a2a2a;
+
+  min-width: 0;
+
+  /* Motion polish */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.project-card h3 {
+  margin-bottom: 8px;
+  color: #f87171;
+}
+
+.project-description {
+  color: #cbd5e1;
+  margin-bottom: 16px;
+
+  /* clamp text */
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+/* Tech tags */
+.project-tech {
+  list-style: none;
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.project-tech li {
+  font-size: 0.75rem;
+  padding: 6px 10px;
+
+  border-radius: 999px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+
+  color: #cbd5f5;
+}
+
+/* Footer link */
+.projects-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.projects-more {
+  color: #f87171;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.projects-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.project-link {
+  margin-top: auto;
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.project-link:hover {
+  color: #7aa2d6; /* muted slate-blue */
+}
+
+.projects-more:hover {
+  color: #fecaca; /* softer red */
+}
+ 
+/* Tablets and small laptops */
+@media (min-width: 1120px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* =========================
+   Experience section layour
+    ========================= */
+
+.experience-section {
+  background: #0d0d0d;
+  position: relative;
+  overflow: hidden;
 }
 
-.card {
-  padding: 2em;
+.experience-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 80px 24px;
+  text-align: center;
 }
 
-.read-the-docs {
-  color: #888;
+.experience-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 40px;
+  text-align: left;
 }
+
+
+/* .experience-bg-shape {
+  position: absolute;
+  top: 40%;
+  left: -250px;
+
+  width: 600px;
+  height: 600px;
+
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(248, 113, 113, 0.12),
+    transparent 70%
+  );
+
+  pointer-events: none;
+} */
+
+.experience-item {
+  max-width: 800px;
+}
+
+.experience-item h3 {
+  color: #f87171; /* red title */
+  margin-bottom: 4px;
+}
+
+.experience-meta {
+  color: #9ca3af; /* muted gray */
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.experience-summary {
+  color: #e5e7eb; /* main readable text */
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.experience-bullets {
+  padding-left: 18px;
+  margin-bottom: 16px;
+}
+
+.experience-bullets li {
+  color: #d1d5db;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.experience-tech {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+.experience-tech strong {
+  color: #e5e7eb;
+}
+
+.experience-section .container {
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+/* =========================
+   Download Resume Button
+    ========================= */
+.resume-section {
+  background: linear-gradient(
+    180deg,
+    #0d0d0d 0%,
+    #070707 60%,
+    #020617 100%
+  );
+}
+
+.resume-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 120px 24px;
+  text-align: center;
+}
+
+.resume-section h2 {
+  color: #f87171;
+  margin-bottom: 40px;
+}
+
+.resume-button-large {
+  display: inline-block;
+  padding: 20px 48px;
+
+  font-size: 1.1rem;
+  font-weight: 600;
+
+  border-radius: 999px;
+  background: rgba(248, 113, 113, 0.18);
+  border: 1px solid rgba(248, 113, 113, 0.6);
+
+  color: #f87171;
+  text-decoration: none;
+
+  box-shadow: 0 12px 36px rgba(248, 113, 113, 0.18);
+
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.resume-button-large:hover {
+  background: rgba(248, 113, 113, 0.28);
+  color: #fecaca;
+  transform: translateY(-2px);
+}
+
+.resume-contact {
+  margin-top: 40px;
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+.resume-contact p {
+  margin: 8px 0;
+}
+
+.resume-contact span {
+  color: #9ca3af;
+}
+
+.resume-contact a {
+  color: #60a5fa;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.resume-contact a:hover {
+  color: #7aa2d6;
+}
+
