@@ -66,7 +66,7 @@ function App() {
           <h2>Resume & Contact</h2>
 
           <a
-            href="data/Resume.pdf"
+            href="/Resume.pdf"
             download
             className="resume-button-large"
           >
